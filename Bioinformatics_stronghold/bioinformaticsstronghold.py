@@ -1,0 +1,107 @@
+
+class BioinformaticsStronghold():
+
+    """Class that contains functions to solve all Bioinformatics Stronghold problems in Rosalind"""
+
+    def __init__(self, seq="ATGC", seq_type="DNA"):
+        self.seq = seq.upper()
+        self.seq_type = seq_type
+        self.is_valid = self.__validateSequence()
+        assert self.is_valid, f"{self.seq} data is not a correct {self.seq_type} sequence!"
+
+    #private method
+    def __validateSequence(self):
+        """Check and uppercase all characters"""
+        from structures import Base_Nucleotides
+        return set(Base_Nucleotides[self.seq_type]).issuperset(self.seq)
+
+
+    def counting_DNA_nucleotides(self):
+        from collections import Counter
+        return dict(Counter(self.seq))
+        # seq_dict = {"A": 0, "C": 0, "G": 0, "T": 0, }
+        # for nuc in self.seq:
+        #     seq_dict[nuc] += 1
+        # return seq_dict
+
+    def transcribing_DNA_into_RNA(self):
+        return self.seq.replace("T", "U")
+
+    def complementing_a_strand_of_DNA(self):
+        mapping = str.maketrans('ATCG', 'TAGC')
+        return self.seq.translate(mapping)[::-1]
+
+    @staticmethod
+    def rabbits_and_recurrence_relations(n, k):
+        f2, f1 = 1, 1
+        for i in range(3, n+1):
+            # fn = f1 + k*f2
+            # f2 = f1
+            # f1 = fn
+            f1, f2 = f1+k*f2, f1
+        return f1
+
+    @staticmethod
+    def seq_GC_content(seq):
+        gc_content = seq.count('C') + seq.count('G')
+        gc_content = 100*gc_content/(len(seq))
+        return gc_content
+
+    @staticmethod
+    def gc_content_to_dict(fasta_dict):
+        gc_content_dict = {}
+        for key, seq in fasta_dict.items():
+            gc_content_dict[key] = BioinformaticsStronghold.seq_GC_content(seq)
+        return gc_content_dict
+
+    @staticmethod
+    def max_gc_content(gc_content_dict):
+        max_gc_key = max(gc_content_dict, key=gc_content_dict.get)
+        max_gc_value = gc_content_dict[max_gc_key]
+        return max_gc_key, max_gc_value
+
+    @staticmethod
+    def computing_GC_content(fasta_path):
+        from utilities import fasta_to_dict
+        fasta_dict = fasta_to_dict(fasta_path)
+        # print(fasta_dict)
+        gc_content_dict = BioinformaticsStronghold.gc_content_to_dict(fasta_dict)
+        # print(gc_content_dict)
+        return BioinformaticsStronghold.max_gc_content(gc_content_dict)
+
+    def counting_point_mutations(self, mutation_seq):
+        if (len(self.seq) != len(mutation_seq)):
+            raise ValueError("Sequences must be the same length!")
+        point_mutations = 0
+        for i in range(len(self.seq)):
+            if (self.seq[i] != mutation_seq[i]):
+                point_mutations += 1
+        return point_mutations
+        # return sum(c1 != c2 for c1, c2 in zip(self.seq,mutation_seq))
+
+    @staticmethod
+    def mendel_first_law(k, m, n):
+        t = k+m+n
+        pr_yy = ( (n*(n-1))+(n*m)+(m*(m-1)/4) )/(t*(t-1))
+        return 1-pr_yy
+
+    def translating_RNA_into_protein(self):
+        from structures import RNA_Aminos
+        protein = []
+        for i in range(0, len(self.seq)-2, 3):
+            codon = self.seq[i:i+3]
+            amino = RNA_Aminos[codon]
+            if amino == '_':
+                break
+            protein.append(amino)
+        return ''.join(protein)
+
+    def finding_a_motif_in_DNA(self, motif):
+        m = len(motif)
+        ilocs = []
+        for i in range(0, len(self.seq)-m+1):
+            subseq = self.seq[i:i+m]
+            if subseq == motif:
+                ilocs.append(i+1)
+        return " ".join(map(str, ilocs))
+        # return " ".join(str(i) for i in ilocs)
