@@ -1,4 +1,7 @@
 
+from utilities import fasta_to_dict
+from structures import Base_Nucleotides, RNA_Aminos
+
 class BioinformaticsStronghold():
 
     """Class that contains functions to solve all Bioinformatics Stronghold problems in Rosalind"""
@@ -12,14 +15,12 @@ class BioinformaticsStronghold():
     #private method
     def __validateSequence(self):
         """Check and uppercase all characters"""
-        from structures import Base_Nucleotides
         return set(Base_Nucleotides[self.seq_type]).issuperset(self.seq)
-
 
     def counting_DNA_nucleotides(self):
         from collections import Counter
         return dict(Counter(self.seq))
-        # seq_dict = {"A": 0, "C": 0, "G": 0, "T": 0, }
+        # seq_dict = {"A": 0, "C": 0, "G": 0, "T": 0}
         # for nuc in self.seq:
         #     seq_dict[nuc] += 1
         # return seq_dict
@@ -62,7 +63,6 @@ class BioinformaticsStronghold():
 
     @staticmethod
     def computing_GC_content(fasta_path):
-        from utilities import fasta_to_dict
         fasta_dict = fasta_to_dict(fasta_path)
         # print(fasta_dict)
         gc_content_dict = BioinformaticsStronghold.gc_content_to_dict(fasta_dict)
@@ -86,7 +86,6 @@ class BioinformaticsStronghold():
         return 1-pr_yy
 
     def translating_RNA_into_protein(self):
-        from structures import RNA_Aminos
         protein = []
         for i in range(0, len(self.seq)-2, 3):
             codon = self.seq[i:i+3]
@@ -105,3 +104,46 @@ class BioinformaticsStronghold():
                 ilocs.append(i+1)
         return " ".join(map(str, ilocs))
         # return " ".join(str(i) for i in ilocs)
+
+    @staticmethod
+    def profile_matrix(sequences):
+        nucleotides = ["A", "C", "G", "T"]
+        nuc_index = {n: i for i, n in enumerate(nucleotides)}
+
+        rows = len(nucleotides)
+        cols = max(len(seq) for seq in sequences)
+
+        profile_matrix = [ [0]*cols for _ in range(rows) ]
+        for seq in sequences:
+            for j, nuc in enumerate(seq):
+                profile_matrix[nuc_index[nuc]][j] += 1
+        return profile_matrix
+
+    @staticmethod
+    def consensus_string(profile_matrix):
+        nucleotides = ["A", "C", "G", "T"]
+        rows = len(nucleotides)
+        cols = len(profile_matrix[0])
+        consensus = []
+        for j in range(cols):
+            row = max(range(rows), key=lambda i: profile_matrix[i][j])
+            consensus.append(nucleotides[row])
+        return "".join(consensus)
+
+    @staticmethod
+    def consensus_and_profile(fasta_path):
+        fasta_dict = fasta_to_dict(fasta_path)
+
+        sequences = list(fasta_dict.values())
+
+        profile_matrix = BioinformaticsStronghold.profile_matrix(sequences)
+
+        consensus = BioinformaticsStronghold.consensus_string(profile_matrix)
+
+        nucleotides = ["A", "C", "G", "T"]
+        rosalind_output = [consensus]
+        for nuc, counts in zip(nucleotides, profile_matrix):
+            rosalind_output.append(f"{nuc}: "+" ".join(str(x) for x in counts))
+
+        return '\n'.join(rosalind_output)
+
