@@ -45,6 +45,11 @@ bio_str = BioinformaticsStronghold(seq, "DNA")
 # print("\nMortal Fibonacci Rabbits")
 # print(bio_str.mortal_fibonacci_rabbits(n=98, m=20))
 
-print("\nOverlap Graph")
-fasta_path = 'Bioinformatics_stronghold/Datasets/rosalind_grph.txt'
-print(bio_str.overlap_graphs(fasta_path, k=3))
+# print("\nOverlap Graph")
+# fasta_path = 'Bioinformatics_stronghold/Datasets/rosalind_grph.txt'
+# print(bio_str.overlap_graphs(fasta_path, k=3))
+
+print("\nCalculating Expected Offsprings")
+couples = [16421, 16051, 16877, 19489, 16280, 17976]
+print(bio_str.calculating_expected_offsprings(couples))
+

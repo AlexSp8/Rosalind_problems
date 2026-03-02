@@ -171,3 +171,12 @@ class BioinformaticsStronghold():
                     edges.append(f"{s[1:]} {t[1:]}")
 
         return "\n".join(edges)
+
+    @staticmethod
+    def calculating_expected_offsprings(couples):
+        #order: AA-AA, AA-Aa, AA-aa, Aa-Aa, Aa-aa, aa-aa
+        dominant_prop = [1.0, 1.0, 1.0, 0.75, 0.5, 0.0]
+        e_offsprings = 0
+        for i in range(len(couples)):
+            e_offsprings += couples[i]*dominant_prop[i]
+        return 2*e_offsprings
