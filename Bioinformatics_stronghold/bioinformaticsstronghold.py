@@ -35,7 +35,7 @@ class BioinformaticsStronghold():
     @staticmethod
     def rabbits_and_recurrence_relations(n, k):
         f2, f1 = 1, 1
-        for i in range(3, n+1):
+        for _ in range(3, n+1):
             # fn = f1 + k*f2
             # f2 = f1
             # f1 = fn
@@ -147,3 +147,27 @@ class BioinformaticsStronghold():
 
         return '\n'.join(rosalind_output)
 
+    @staticmethod
+    def mortal_fibonacci_rabbits(n, m):
+        ages = [0]*m
+        ages[0] = 1
+        for _ in range(1,n):
+            newborns = sum(ages[1:])
+            ages[1:] = ages[:-1]
+            ages[0] = newborns
+        return sum(ages)
+
+    @staticmethod
+    def overlap_graphs(fasta_path, k):
+        fasta_dict = fasta_to_dict(fasta_path)
+
+        suffix = {key: seq[-k:] for key, seq in fasta_dict.items()}
+        prefix = {key: seq[:k] for key, seq in fasta_dict.items()}
+
+        edges = []
+        for s in fasta_dict:
+            for t in fasta_dict:
+                if s != t and suffix[s] == prefix[t]:
+                    edges.append(f"{s[1:]} {t[1:]}")
+
+        return "\n".join(edges)

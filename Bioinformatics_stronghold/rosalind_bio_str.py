@@ -38,6 +38,13 @@ bio_str = BioinformaticsStronghold(seq, "DNA")
 # motif = "GATTAGTGA"
 # print(bio_str.finding_a_motif_in_DNA(motif))
 
-print("\nConsensus and profile")
-fasta_path = 'Bioinformatics_stronghold/Datasets/rosalind_cons.txt'
-print(bio_str.consensus_and_profile(fasta_path))
+# print("\nConsensus and profile")
+# fasta_path = 'Bioinformatics_stronghold/Datasets/rosalind_cons.txt'
+# print(bio_str.consensus_and_profile(fasta_path))
+
+# print("\nMortal Fibonacci Rabbits")
+# print(bio_str.mortal_fibonacci_rabbits(n=98, m=20))
+
+print("\nOverlap Graph")
+fasta_path = 'Bioinformatics_stronghold/Datasets/rosalind_grph.txt'
+print(bio_str.overlap_graphs(fasta_path, k=3))
