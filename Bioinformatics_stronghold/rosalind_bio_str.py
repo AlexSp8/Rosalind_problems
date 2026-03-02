@@ -49,7 +49,10 @@ bio_str = BioinformaticsStronghold(seq, "DNA")
 # fasta_path = 'Bioinformatics_stronghold/Datasets/rosalind_grph.txt'
 # print(bio_str.overlap_graphs(fasta_path, k=3))
 
-print("\nCalculating Expected Offsprings")
-couples = [16421, 16051, 16877, 19489, 16280, 17976]
-print(bio_str.calculating_expected_offsprings(couples))
+# print("\nCalculating Expected Offsprings")
+# couples = [16421, 16051, 16877, 19489, 16280, 17976]
+# print(bio_str.calculating_expected_offsprings(couples))
 
+print("\nFinding a Shared Motif")
+fasta_path = 'Bioinformatics_stronghold/Datasets/rosalind_lcsm.txt'
+print(bio_str.finding_a_shared_motif(fasta_path))

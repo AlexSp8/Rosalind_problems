@@ -180,3 +180,14 @@ class BioinformaticsStronghold():
         for i in range(len(couples)):
             e_offsprings += couples[i]*dominant_prop[i]
         return 2*e_offsprings
+
+    @staticmethod
+    def finding_a_shared_motif(fasta_path):
+        sequences = list(fasta_to_dict(fasta_path).values())
+        shortest_seq = min(sequences, key=len)
+        max_l = len(shortest_seq)
+        for l in range(max_l,0,-1):
+            for i in range(max_l-l+1):
+                motif = shortest_seq[i:i+l]
+                if all(motif in seq for seq in sequences):
+                    return motif
