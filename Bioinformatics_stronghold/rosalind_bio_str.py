@@ -1,5 +1,6 @@
 
 from bioinformaticsstronghold import BioinformaticsStronghold
+from utilities import read_file
 
 seq = "ATCCAGCT"
 bio_str = BioinformaticsStronghold(seq, "DNA")
@@ -43,7 +44,7 @@ bio_str = BioinformaticsStronghold(seq, "DNA")
 # print(bio_str.consensus_and_profile(fasta_path))
 
 # print("\nMortal Fibonacci Rabbits")
-# print(bio_str.mortal_fibonacci_rabbits(n=98, m=20))
+# print(bio_str.mortal_fibonacci_rabbits(n=98, m_ages=20))
 
 # print("\nOverlap Graph")
 # fasta_path = 'Bioinformatics_stronghold/Datasets/rosalind_grph.txt'
@@ -51,11 +52,16 @@ bio_str = BioinformaticsStronghold(seq, "DNA")
 
 # print("\nCalculating Expected Offsprings")
 # couples = [16421, 16051, 16877, 19489, 16280, 17976]
-# print(bio_str.calculating_expected_offsprings(couples))
+# print(bio_str.calculating_expected_offsprings(couples, n_offs=2))
 
 # print("\nFinding a Shared Motif")
 # fasta_path = 'Bioinformatics_stronghold/Datasets/rosalind_lcsm.txt'
 # print(bio_str.finding_a_shared_motif(fasta_path))
 
-print("\nIndependent Alleles")
-print(bio_str.independent_alleles(gen=5, n_min=9, prop=0.25))
+# print("\nIndependent Alleles")
+# print(bio_str.independent_alleles(gen=5, n_min=9, prop=0.25))
+
+print("\nFinding a Protein Motif")
+uniprot_ids = read_file(file_path='Bioinformatics_stronghold/Datasets/rosalind_mprt.txt')
+protein_motif = 'N{P}[ST]{P}'
+print(bio_str.finding_a_protein_motif(uniprot_ids,protein_motif))

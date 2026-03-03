@@ -1,5 +1,5 @@
 
-from utilities import fasta_to_dict
+from utilities import fasta_path_to_dict, fasta_list_to_dict
 from structures import Base_Nucleotides, RNA_Aminos
 
 class BioinformaticsStronghold():
@@ -63,7 +63,7 @@ class BioinformaticsStronghold():
 
     @staticmethod
     def computing_GC_content(fasta_path):
-        fasta_dict = fasta_to_dict(fasta_path)
+        fasta_dict = fasta_path_to_dict(fasta_path)
         # print(fasta_dict)
         gc_content_dict = BioinformaticsStronghold.gc_content_to_dict(fasta_dict)
         # print(gc_content_dict)
@@ -109,10 +109,8 @@ class BioinformaticsStronghold():
     def profile_matrix(sequences):
         nucleotides = ["A", "C", "G", "T"]
         nuc_index = {n: i for i, n in enumerate(nucleotides)}
-
         rows = len(nucleotides)
         cols = max(len(seq) for seq in sequences)
-
         profile_matrix = [ [0]*cols for _ in range(rows) ]
         for seq in sequences:
             for j, nuc in enumerate(seq):
@@ -132,38 +130,31 @@ class BioinformaticsStronghold():
 
     @staticmethod
     def consensus_and_profile(fasta_path):
-        fasta_dict = fasta_to_dict(fasta_path)
-
+        fasta_dict = fasta_path_to_dict(fasta_path)
         sequences = list(fasta_dict.values())
-
         profile_matrix = BioinformaticsStronghold.profile_matrix(sequences)
-
         consensus = BioinformaticsStronghold.consensus_string(profile_matrix)
-
         nucleotides = ["A", "C", "G", "T"]
         rosalind_output = [consensus]
         for nuc, counts in zip(nucleotides, profile_matrix):
             rosalind_output.append(f"{nuc}: "+" ".join(str(x) for x in counts))
-
         return '\n'.join(rosalind_output)
 
     @staticmethod
-    def mortal_fibonacci_rabbits(n, m):
-        ages = [0]*m
+    def mortal_fibonacci_rabbits(n_months, m_ages):
+        ages = [0]*m_ages
         ages[0] = 1
-        for _ in range(1,n):
+        for _ in range(1,n_months):
             newborns = sum(ages[1:])
             ages[1:] = ages[:-1]
             ages[0] = newborns
         return sum(ages)
 
     @staticmethod
-    def overlap_graphs(fasta_path, k):
-        fasta_dict = fasta_to_dict(fasta_path)
-
+    def overlap_graphs(fasta_path, k=3):
+        fasta_dict = fasta_path_to_dict(fasta_path)
         suffix = {key: seq[-k:] for key, seq in fasta_dict.items()}
         prefix = {key: seq[:k] for key, seq in fasta_dict.items()}
-
         edges = []
         for s in fasta_dict:
             for t in fasta_dict:
@@ -173,17 +164,17 @@ class BioinformaticsStronghold():
         return "\n".join(edges)
 
     @staticmethod
-    def calculating_expected_offsprings(couples):
+    def calculating_expected_offsprings(couples, n_offs=2):
         #order: AA-AA, AA-Aa, AA-aa, Aa-Aa, Aa-aa, aa-aa
-        dominant_prop = [1.0, 1.0, 1.0, 0.75, 0.5, 0.0]
-        e_offsprings = 0
+        dom_prop = [1.0, 1.0, 1.0, 0.75, 0.5, 0.0]
+        e_dom_offsprings = 0
         for i in range(len(couples)):
-            e_offsprings += couples[i]*dominant_prop[i]
-        return 2*e_offsprings
+            e_dom_offsprings += couples[i]*dom_prop[i]
+        return n_offs*e_dom_offsprings
 
     @staticmethod
     def finding_a_shared_motif(fasta_path):
-        sequences = list(fasta_to_dict(fasta_path).values())
+        sequences = list(fasta_path_to_dict(fasta_path).values())
         shortest_seq = min(sequences, key=len)
         max_l = len(shortest_seq)
         for l in range(max_l,0,-1):
@@ -200,3 +191,76 @@ class BioinformaticsStronghold():
         for s in range(n_min,n+1):
             total_p += comb(n, s)*(prop**s)*((1-prop)**(n-s))
         return total_p
+
+    @staticmethod
+    def motif_rules(protein_motif):
+        rules = []
+        i = 0
+        while i < len(protein_motif):
+            if protein_motif[i] == '{':
+                jend = protein_motif.index('}', i)
+                rules.append( ("not", protein_motif[i+1:jend]) )
+                i = jend+1
+            elif protein_motif[i] == '[':
+                jend = protein_motif.index(']', i)
+                rules.append( ("one of", protein_motif[i+1:jend]) )
+                i = jend+1
+            else:
+                rules.append( ("exact", protein_motif[i]) )
+                i += 1
+        return rules
+
+    @staticmethod
+    def motif_match_window(protein_window,rules):
+        for i in range(len(rules)):
+            rule_type, letters = rules[i]
+
+            if rule_type == "not":
+                if protein_window[i] in letters:
+                    return False
+            elif rule_type == "one of":
+                if protein_window[i] not in letters:
+                    return False
+            elif rule_type == "exact":
+                if protein_window[i] != letters:
+                    return False
+
+        return True
+
+    @staticmethod
+    def get_protein_from_uniprot(uid):
+        import requests
+        accession_id = uid.split('_')[0]
+        url = f'http://www.uniprot.org/uniprot/{accession_id}.fasta'
+        protein_response = requests.get(url)
+        lines_list = protein_response.text.splitlines()
+        # header_str = lines_list[0]
+        return ''.join(lines_list[1:])
+
+    @staticmethod
+    def matching_motif_locations(protein_str,rules_list):
+        len_motif = len(rules_list)
+        locations_list = []
+        for i in range(len(protein_str)-len_motif+1):
+            protein_window = protein_str[i:i+len_motif]
+            if BioinformaticsStronghold.motif_match_window(protein_window,rules_list):
+                locations_list.append(i+1)
+        return locations_list
+
+    @staticmethod
+    def finding_a_protein_motif(uniprot_ids,protein_motif):
+
+        motif_rules_list = BioinformaticsStronghold.motif_rules(protein_motif)
+
+        locations_dict = {}
+        for uid in uniprot_ids:
+            protein_str = BioinformaticsStronghold.get_protein_from_uniprot(uid)
+            locations_list = BioinformaticsStronghold.matching_motif_locations(protein_str,motif_rules_list)
+            if locations_list:
+                locations_dict[uid] = locations_list
+
+        rosalind_output = []
+        for key, value in locations_dict.items():
+            rosalind_output.append(key)
+            rosalind_output.append( ' '.join(str(x) for x in value) )
+        return '\n'.join(rosalind_output)

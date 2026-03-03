@@ -4,14 +4,12 @@ def read_file(file_path):
         list = [l.strip() for l in f.readlines()]
     return list
 
-def writeFile(filePath, seq, mode ='w'):
+def writeFile(filePath, seq, mode='w'):
     #'w' write, 'a' append
     with open(filePath, mode) as f:
         f.write(seq + '\n')
 
-def fasta_to_dict(fasta_path):
-    fasta_file = read_file(fasta_path)
-    # print(fasta_file)
+def fasta_list_to_dict(fasta_file):
     fasta_dict = {}
     fasta_label = ""
     for line in fasta_file:
@@ -21,3 +19,7 @@ def fasta_to_dict(fasta_path):
         else:
             fasta_dict[fasta_label] += line
     return fasta_dict
+
+def fasta_path_to_dict(fasta_path):
+    fasta_list = read_file(fasta_path)
+    return fasta_list_to_dict(fasta_list)
