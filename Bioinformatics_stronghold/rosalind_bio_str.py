@@ -53,6 +53,9 @@ bio_str = BioinformaticsStronghold(seq, "DNA")
 # couples = [16421, 16051, 16877, 19489, 16280, 17976]
 # print(bio_str.calculating_expected_offsprings(couples))
 
-print("\nFinding a Shared Motif")
-fasta_path = 'Bioinformatics_stronghold/Datasets/rosalind_lcsm.txt'
-print(bio_str.finding_a_shared_motif(fasta_path))
+# print("\nFinding a Shared Motif")
+# fasta_path = 'Bioinformatics_stronghold/Datasets/rosalind_lcsm.txt'
+# print(bio_str.finding_a_shared_motif(fasta_path))
+
+print("\nIndependent Alleles")
+print(bio_str.independent_alleles(gen=5, n_min=9, prop=0.25))

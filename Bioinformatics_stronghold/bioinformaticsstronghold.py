@@ -191,3 +191,12 @@ class BioinformaticsStronghold():
                 motif = shortest_seq[i:i+l]
                 if all(motif in seq for seq in sequences):
                     return motif
+
+    @staticmethod
+    def independent_alleles(gen,n_min,prop):
+        from math import comb
+        n = 2**gen
+        total_p = 0
+        for s in range(n_min,n+1):
+            total_p += comb(n, s)*(prop**s)*((1-prop)**(n-s))
+        return total_p
