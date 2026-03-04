@@ -1,67 +1,85 @@
 
-from bioinformaticsstronghold import BioinformaticsStronghold
-from utilities import read_file
+from biostronghold import BioStronghold
+from utilities import file_to_list
 
-seq = "ATCCAGCT"
-bio_str = BioinformaticsStronghold(seq, "DNA")
+seq = "GAGCCTACTAACGGGAT"
+bio_strong = BioStronghold(seq, "DNA")
+file_path0 = "Bioinformatics_stronghold/Datasets/"
 
 # print("Counting DNA Nucleotides")
-# count_dict = bio_str.counting_DNA_nucleotides()
-# for key, value in count_dict.items():
-#     print(f"{key}: {value}", end=' ')
+# bio_strong.seq = 'AGCTTTTCATTCTGACTGCAACGGGCAATATGTCTCTGTGTGGATTAAAAAAAGAGTGTCTGATAGCAGC'
+# bio_strong.seq_type = 'DNA'
+# print(bio_strong.counting_DNA_nucleotides())
 
-# print("\n\nTranscribing DNA into RNA")
-# print(bio_str.transcribing_DNA_into_RNA())
+# print("\nTranscribing DNA into RNA")
+# bio_strong.seq = 'GATGGAACTTGACTACGTAAATT'
+# bio_strong.seq_type = 'DNA'
+# print(bio_strong.transcribing_DNA_into_RNA())
 
 # print("\nComplementing a strand of DNA")
-# print(bio_str.complementing_a_strand_of_DNA())
-# print(bio_str.seq)
+# bio_strong.seq = 'AAAACCCGGT'
+# bio_strong.seq_type = 'DNA'
+# print(bio_strong.complementing_a_strand_of_DNA())
 
 # print("\nRabbits and Recurrence Relations")
-# print(bio_str.rabbits_and_recurrence_relations(n=36, k=5))
+# print(bio_strong.rabbits_and_recurrence_relations(n=5, k=3))
 
 # print("\nComputing GC Content")
-# fasta_path = "Bioinformatics_stronghold/Datasets/rosalind_gc.txt"
-# print(bio_str.computing_GC_content(fasta_path))
+# file_path = file_path0 + "rosalind_gc.txt"
+# print(bio_strong.computing_GC_content(file_path))
 
 # print("\nCounting Point Mutations")
+# bio_strong.seq = 'GAGCCTACTAACGGGAT'
+# bio_strong.seq_type = 'DNA'
 # mutation_seq = "CATCGTAATGACGGCCT"
-# print(bio_str.counting_point_mutations(mutation_seq))
+# print(bio_strong.counting_point_mutations(mutation_seq))
 
 # print("\nMendel's First Law")
-# k_hom_dom, m_het, n_hom_rec = 27, 28, 16
-# print(bio_str.mendel_first_law(k_hom_dom, m_het, n_hom_rec))
+# k_hom_dom, m_het, n_hom_rec = 2, 2, 2
+# print(bio_strong.mendel_first_law(k_hom_dom, m_het, n_hom_rec))
 
 # print("\nTranslating RNA into Protein")
-# print(bio_str.translating_RNA_into_protein())
+# bio_strong.seq = 'AUGGCCAUGGCGCCCAGAACUGAGAUCAAUAGUACCCGUAUUAACGGGUGA'
+# bio_strong.seq_type = 'RNA'
+# print(bio_strong.translating_RNA_into_protein())
 
 # print("\nFinding a motif in DNA")
-# motif = "GATTAGTGA"
-# print(bio_str.finding_a_motif_in_DNA(motif))
+# bio_strong.seq = 'GATATATGCATATACTT'
+# bio_strong.seq_type = 'DNA'
+# motif = "ATAT"
+# print(bio_strong.finding_a_motif_in_DNA(motif))
 
 # print("\nConsensus and profile")
-# fasta_path = 'Bioinformatics_stronghold/Datasets/rosalind_cons.txt'
-# print(bio_str.consensus_and_profile(fasta_path))
+# file_path = file_path0 + "rosalind_cons.txt"
+# print(bio_strong.consensus_and_profile(file_path))
 
 # print("\nMortal Fibonacci Rabbits")
-# print(bio_str.mortal_fibonacci_rabbits(n=98, m_ages=20))
+# print(bio_strong.mortal_fibonacci_rabbits(n_months=6, m_ages=3))
 
 # print("\nOverlap Graph")
-# fasta_path = 'Bioinformatics_stronghold/Datasets/rosalind_grph.txt'
-# print(bio_str.overlap_graphs(fasta_path, k=3))
+# file_path = file_path0+'rosalind_grph.txt'
+# print(bio_strong.overlap_graphs(file_path, k=3))
 
 # print("\nCalculating Expected Offsprings")
-# couples = [16421, 16051, 16877, 19489, 16280, 17976]
-# print(bio_str.calculating_expected_offsprings(couples, n_offs=2))
+# couples = [1, 0, 0, 1, 0, 1]
+# print(bio_strong.calculating_expected_offsprings(couples, n_offs=2))
 
 # print("\nFinding a Shared Motif")
-# fasta_path = 'Bioinformatics_stronghold/Datasets/rosalind_lcsm.txt'
-# print(bio_str.finding_a_shared_motif(fasta_path))
+# file_path = file_path0+'rosalind_lcsm.txt'
+# print(bio_strong.finding_a_shared_motif(file_path))
 
 # print("\nIndependent Alleles")
-# print(bio_str.independent_alleles(gen=5, n_min=9, prop=0.25))
+# print(bio_strong.independent_alleles(gen=2, n_min=1, prop=0.25))
 
-print("\nFinding a Protein Motif")
-uniprot_ids = read_file(file_path='Bioinformatics_stronghold/Datasets/rosalind_mprt.txt')
-protein_motif = 'N{P}[ST]{P}'
-print(bio_str.finding_a_protein_motif(uniprot_ids,protein_motif))
+# print("\nFinding a Protein Motif")
+# uniprot_ids = file_to_list(file_path0+'rosalind_mprt.txt')
+# protein_motif = 'N{P}[ST]{P}'
+# print(bio_strong.finding_a_protein_motif(uniprot_ids,protein_motif))
+
+print("\nInferring mRNA from Protein")
+print(bio_strong.inferring_mRNA_from_protein('MA'))
+
+# print("\nOpen Reading Frames")
+# fasta_path = file_path0+'fasta.txt'
+# print(bio_strong.open_reading_frames(fasta_path))
+

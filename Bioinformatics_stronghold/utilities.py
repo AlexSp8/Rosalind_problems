@@ -1,10 +1,10 @@
 
-def read_file(file_path):
+def file_to_list(file_path):
     with open(file_path, 'r') as f:
-        list = [l.strip() for l in f.readlines()]
-    return list
+        file_list = [l.strip() for l in f.readlines()]
+    return file_list
 
-def writeFile(filePath, seq, mode='w'):
+def write_file(filePath, seq, mode='w'):
     #'w' write, 'a' append
     with open(filePath, mode) as f:
         f.write(seq + '\n')
@@ -21,5 +21,5 @@ def fasta_list_to_dict(fasta_file):
     return fasta_dict
 
 def fasta_path_to_dict(fasta_path):
-    fasta_list = read_file(fasta_path)
+    fasta_list = file_to_list(fasta_path)
     return fasta_list_to_dict(fasta_list)
