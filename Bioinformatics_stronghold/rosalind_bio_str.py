@@ -3,13 +3,13 @@ from biostronghold import BioStronghold
 from utilities import file_to_list
 
 seq = "GAGCCTACTAACGGGAT"
-bio_strong = BioStronghold(seq, "DNA")
+bio_strong = BioStronghold(seq, 'DNA')
 file_path0 = "Bioinformatics_stronghold/Datasets/"
 
-# print("Counting DNA Nucleotides")
-# bio_strong.seq = 'AGCTTTTCATTCTGACTGCAACGGGCAATATGTCTCTGTGTGGATTAAAAAAAGAGTGTCTGATAGCAGC'
-# bio_strong.seq_type = 'DNA'
-# print(bio_strong.counting_DNA_nucleotides())
+print("Counting DNA Nucleotides")
+bio_strong.seq = 'AGCTTTTCATTCTGACTGCAACGGGCAATATGTCTCTGTGTGGATTAAAAAAAGAGTGTCTGATAGCAGC'
+bio_strong.seq_type = 'DNA'
+print(bio_strong.counting_DNA_nucleotides())
 
 # print("\nTranscribing DNA into RNA")
 # bio_strong.seq = 'GATGGAACTTGACTACGTAAATT'
@@ -38,10 +38,10 @@ file_path0 = "Bioinformatics_stronghold/Datasets/"
 # k_hom_dom, m_het, n_hom_rec = 2, 2, 2
 # print(bio_strong.mendel_first_law(k_hom_dom, m_het, n_hom_rec))
 
-# print("\nTranslating RNA into Protein")
-# bio_strong.seq = 'AUGGCCAUGGCGCCCAGAACUGAGAUCAAUAGUACCCGUAUUAACGGGUGA'
-# bio_strong.seq_type = 'RNA'
-# print(bio_strong.translating_RNA_into_protein())
+print("\nTranslating RNA into Protein")
+bio_strong.seq = 'AUGGCCAUGGCGCCCAGAACUGAGAUCAAUAGUACCCGUAUUAACGGGUGA'
+bio_strong.seq_type = 'RNA'
+print(bio_strong.translating_RNA_into_protein())
 
 # print("\nFinding a motif in DNA")
 # bio_strong.seq = 'GATATATGCATATACTT'
@@ -76,10 +76,9 @@ file_path0 = "Bioinformatics_stronghold/Datasets/"
 # protein_motif = 'N{P}[ST]{P}'
 # print(bio_strong.finding_a_protein_motif(uniprot_ids,protein_motif))
 
-print("\nInferring mRNA from Protein")
-print(bio_strong.inferring_mRNA_from_protein('MA'))
+# print("\nInferring mRNA from Protein")
+# print(bio_strong.inferring_mRNA_from_protein('MA'))
 
-# print("\nOpen Reading Frames")
-# fasta_path = file_path0+'fasta.txt'
-# print(bio_strong.open_reading_frames(fasta_path))
-
+print("\nOpen Reading Frames")
+fasta_path = file_path0+'rosalind_orf.txt'
+print(bio_strong.open_reading_frames(fasta_path))

@@ -47,7 +47,7 @@ class BioStronghold(Biosequence):
         return 1-pr_yy
 
     def translating_RNA_into_protein(self):
-        return super().translate_sequence()
+        return super().translate_sequence(istart=0)
 
     def finding_a_motif_in_DNA(self, motif):
         return super().motif_locations_in_sequence(motif)
@@ -57,6 +57,7 @@ class BioStronghold(Biosequence):
         sequences = list(fasta_dict.values())
         profile_matrix = super().profile_matrix(sequences)
         consensus = super().consensus_string(profile_matrix)
+
         nucleotides = ["A", "C", "G", "T"]
         rosalind_output = [consensus]
         for nuc, counts in zip(nucleotides, profile_matrix):
@@ -119,18 +120,6 @@ class BioStronghold(Biosequence):
         return super().get_mRNA_seqs_from_protein(protein_seq)
 
     @staticmethod
-    def reading_frames_from_DNA(seq):
-        reading_frames = []
-        for i in range(3):
-            rframe = []
-            for i in range(i, len(seq)-2, 3):
-                codon = seq[i:i+3]
-                amino = biostructures.DNA_CODON_TO_AMINO[codon]
-                rframe.append(amino)
-            reading_frames.append(''.join(rframe))
-        return reading_frames
-
-    @staticmethod
     def proteins_from_reading_frame(reading_frame):
         proteins = []
         start_indices = [i for i, aa in enumerate(reading_frame) if aa == 'M']
@@ -142,13 +131,15 @@ class BioStronghold(Biosequence):
                 proteins.append(protein)
         return proteins
 
-    @staticmethod
-    def open_reading_frames(fasta_path):
+    def open_reading_frames(self, fasta_path):
         seq = list(fasta_path_to_dict(fasta_path).values())[0]
-        reading_frames = BioStronghold.reading_frames_from_DNA(seq)
-        reverse_complement_seq = BioStronghold.complementing_a_strand_of_DNA()
-        proteins = {}
-        for i in range(len(reading_frames)):
-            proteins[i] = BioStronghold.proteins_from_reading_frame(reading_frames[i])
-            # proteins.append(BioStronghold.proteins_from_reading_frame(reading_frames[i]))
-        return proteins
+        rframes = super().get_sequence_reading_frames(seq, seq_type='DNA')
+        # print(rframes)
+        total_proteins = []
+        for rf in rframes:
+            rf_proteins = super().get_proteins_from_reading_frame(rf)
+            if rf_proteins:
+                for p in rf_proteins:
+                    if p not in total_proteins:
+                        total_proteins.append(p)
+        return '\n'.join(total_proteins)

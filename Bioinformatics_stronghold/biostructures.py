@@ -1,5 +1,5 @@
 
-Base_Nucleotides = {
+BASE_NUCLEOTIDES = {
     "DNA": ["A", "T", "G", "C"],
     "RNA": ["A", "U", "G", "C"]
 }
