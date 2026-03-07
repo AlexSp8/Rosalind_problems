@@ -145,19 +145,6 @@ class BioStronghold(Biosequence):
         """Count possible mRNA sequences for a protein"""
         return super().get_mRNA_seqs_from_protein(protein_seq)
 
-    @staticmethod
-    def proteins_from_reading_frame(reading_frame: str) -> List[str]:
-        """Extract proteins from a reading frame"""
-        proteins = []
-        start_indices = [i for i, aa in enumerate(reading_frame) if aa == 'M']
-        for istart in start_indices:
-            remaining_rf = reading_frame[istart:]
-            if '_' in remaining_rf:
-                istop = remaining_rf.find('_')
-                protein = remaining_rf[:istop]
-                proteins.append(protein)
-        return proteins
-
     def open_reading_frames(self, fasta_path: str) -> str:
         """Find all open reading frames in DNA sequence"""
         seq = list(fasta_path_to_dict(fasta_path).values())[0]
@@ -170,3 +157,11 @@ class BioStronghold(Biosequence):
                     if p not in total_proteins:
                         total_proteins.append(p)
         return '\n'.join(total_proteins)
+
+    @staticmethod
+    def enumerating_gene_orders(n: int) -> List[tuple]:
+        """Calculate number of gene orders for n genes"""
+        import itertools
+        numbers = [x for x in range(1, n + 1)]
+        permutations = itertools.permutations(numbers)
+        return list(permutations)
