@@ -1,11 +1,21 @@
+"""
+Central configuration for biological sequence constants and data.
+"""
 
+from pathlib import Path
+
+# Base project directory
+PROJECT_ROOT = Path(__file__).parent
+
+# Nucleotide base definitions
 BASE_NUCLEOTIDES = {
     "DNA": ["A", "T", "G", "C"],
     "RNA": ["A", "U", "G", "C"]
 }
 
+# RNA Codon to Amino Acid mapping
+# 'M' - START, '_' - STOP
 RNA_CODON_TO_AMINO = {
-    # 'M' - START, '_' - STOP
     "GCU": "A", "GCC": "A", "GCA": "A", "GCG": "A",
     "UGU": "C", "UGC": "C",
     "GAU": "D", "GAC": "D",
@@ -29,6 +39,32 @@ RNA_CODON_TO_AMINO = {
     "UAA": "_", "UAG": "_", "UGA": "_"
 }
 
+# DNA Codon to Amino Acid mapping
+DNA_CODON_TO_AMINO = {
+    "GCA": "A", "GCC": "A", "GCG": "A", "GCT": "A",
+    "TGT": "C", "TGC": "C",
+    "GAT": "D", "GAC": "D",
+    "GAA": "E", "GAG": "E",
+    "TTT": "F", "TTC": "F",
+    "GGA": "G", "GGC": "G", "GGG": "G", "GGT": "G",
+    "CAT": "H", "CAC": "H",
+    "ATA": "I", "ATT": "I", "ATC": "I",
+    "AAA": "K", "AAG": "K",
+    "TTA": "L", "TTG": "L", "CTT": "L", "CTC": "L", "CTA": "L", "CTG": "L",
+    "ATG": "M",
+    "AAT": "N", "AAC": "N",
+    "CCT": "P", "CCC": "P", "CCA": "P", "CCG": "P",
+    "CAA": "Q", "CAG": "Q",
+    "CGT": "R", "CGC": "R", "CGA": "R", "CGG": "R", "AGA": "R", "AGG": "R",
+    "TCT": "S", "TCC": "S", "TCA": "S", "TCG": "S", "AGT": "S", "AGC": "S",
+    "ACT": "T", "ACC": "T", "ACA": "T", "ACG": "T",
+    "GTT": "V", "GTC": "V", "GTA": "V", "GTG": "V",
+    "TGG": "W",
+    "TAT": "Y", "TAC": "Y",
+    "TAA": "_", "TAG": "_", "TGA": "_"
+}
+
+# RNA Amino Acid to Codon mapping
 RNA_AMINO_TO_CODON = {
     'A': ['GCU', 'GCC', 'GCA', 'GCG'],
     'C': ['UGU', 'UGC'],
@@ -48,31 +84,7 @@ RNA_AMINO_TO_CODON = {
     'S': ['UCU', 'UCC', 'UCA', 'UCG', 'AGU', 'AGC'],
     'T': ['ACU', 'ACC', 'ACA', 'ACG'],
     'V': ['GUU', 'GUC', 'GUA', 'GUG'],
-    'W': ['UGG'], 'Y': ['UAU', 'UAC'],
+    'W': ['UGG'],
+    'Y': ['UAU', 'UAC'],
     '_': ['UAA', 'UAG', 'UGA']
-}
-
-DNA_CODON_TO_AMINO = {
-    # 'M' - START, '_' - STOP
-    "GCT": "A", "GCC": "A", "GCA": "A", "GCG": "A",
-    "TGT": "C", "TGC": "C",
-    "GAT": "D", "GAC": "D",
-    "GAA": "E", "GAG": "E",
-    "TTT": "F", "TTC": "F",
-    "GGT": "G", "GGC": "G", "GGA": "G", "GGG": "G",
-    "CAT": "H", "CAC": "H",
-    "ATA": "I", "ATT": "I", "ATC": "I",
-    "AAA": "K", "AAG": "K",
-    "TTA": "L", "TTG": "L", "CTT": "L", "CTC": "L", "CTA": "L", "CTG": "L",
-    "ATG": "M",
-    "AAT": "N", "AAC": "N",
-    "CCT": "P", "CCC": "P", "CCA": "P", "CCG": "P",
-    "CAA": "Q", "CAG": "Q",
-    "CGT": "R", "CGC": "R", "CGA": "R", "CGG": "R", "AGA": "R", "AGG": "R",
-    "TCT": "S", "TCC": "S", "TCA": "S", "TCG": "S", "AGT": "S", "AGC": "S",
-    "ACT": "T", "ACC": "T", "ACA": "T", "ACG": "T",
-    "GTT": "V", "GTC": "V", "GTA": "V", "GTG": "V",
-    "TGG": "W",
-    "TAT": "Y", "TAC": "Y",
-    "TAA": "_", "TAG": "_", "TGA": "_"
 }
