@@ -11,13 +11,15 @@ parent_dir = str(Path(__file__).parent.parent)
 if parent_dir not in sys.path:
     sys.path.insert(0, parent_dir)
 
-from config import BASE_NUCLEOTIDES, RNA_CODON_TO_AMINO, DNA_CODON_TO_AMINO, RNA_AMINO_TO_CODON
+from config import BASE_NUCLEOTIDES, RNA_CODON_TO_AMINO, DNA_CODON_TO_AMINO, RNA_AMINO_TO_CODON, MONOISOTROPIC_AMINO_MASS_TABLE
 
 
 class Biosequence:
     """Class for manipulating biological sequences (DNA, RNA)"""
 
-    def __init__(self, seq: str = 'ATGC', seq_type: str = 'DNA', seq_list: Optional[List[str]] = None, seq_dict: Optional[Dict[str, str]] = None):
+    def __init__(self, seq: str = 'ATGC', seq_type: str = 'DNA',
+                  seq_list: Optional[List[str]] = None,
+                    seq_dict: Optional[Dict[str, str]] = None):
         if seq_list is None:
             seq_list = ['ATGC']
         if seq_dict is None:
@@ -48,7 +50,8 @@ class Biosequence:
         from collections import Counter
         return dict(Counter(target_seq))
 
-    def transcribe_sequence(self, seq: Optional[str] = None, seq_type: Optional[str] = None) -> str:
+    def transcribe_sequence(self, seq: Optional[str] = None,
+                             seq_type: Optional[str] = None) -> str:
         """Returns transcribed RNA from DNA sequence or starting DNA from RNA sequence"""
         target_seq = self.return_target_seq(seq)
         target_seq_type = self.return_target_seq_type(seq_type)
@@ -59,7 +62,8 @@ class Biosequence:
         else:
             raise ValueError("Invalid sequence type! Transcription not performed!")
 
-    def complement_sequence(self, seq: Optional[str] = None, seq_type: Optional[str] = None) -> str:
+    def complement_sequence(self, seq: Optional[str] = None,
+                             seq_type: Optional[str] = None) -> str:
         """Returns complement of sequence"""
         target_seq = self.return_target_seq(seq)
         target_seq_type = self.return_target_seq_type(seq_type)
@@ -71,7 +75,8 @@ class Biosequence:
             mapping = ''
         return target_seq.translate(mapping)
 
-    def reverse_complement_sequence(self, seq: Optional[str] = None, seq_type: Optional[str] = None) -> str:
+    def reverse_complement_sequence(self, seq: Optional[str] = None,
+                                     seq_type: Optional[str] = None) -> str:
         """Returns reverse complement of sequence"""
         return ''.join(self.complement_sequence(seq, seq_type))[::-1]
 
@@ -79,49 +84,55 @@ class Biosequence:
         """Returns GC content % of sequence"""
         target_seq = self.return_target_seq(seq)
         gc_content = target_seq.count('C') + target_seq.count('G')
-        return gc_content * 100 / len(target_seq)
+        return gc_content*100/len(target_seq)
 
-    def get_point_mutations(self, mutation_seq: str, seq: Optional[str] = None) -> int:
+    def get_point_mutations(self, mutation_seq: str,
+                             seq: Optional[str] = None) -> int:
         """Count point mutations between sequences"""
         target_seq = self.return_target_seq(seq)
         if len(target_seq) != len(mutation_seq):
             raise ValueError("Sequences must be the same length!")
         return sum(c1 != c2 for c1, c2 in zip(target_seq, mutation_seq))
 
-    def translate_sequence(self, istart: int = 0, seq: Optional[str] = None, seq_type: Optional[str] = None) -> str:
+    def translate_sequence(self, istart: int = 0,
+        seq: Optional[str] = None, seq_type: Optional[str] = None) -> str:
         """Returns amino-acid sequence from translation of sequence"""
         target_seq = self.return_target_seq(seq)
         target_seq_type = self.return_target_seq_type(seq_type)
+        if target_seq_type == 'DNA':
+            codon_dict = DNA_CODON_TO_AMINO
+        elif target_seq_type == 'RNA':
+            codon_dict = RNA_CODON_TO_AMINO
+        else:
+            raise ValueError("Invalid sequence type! Translation not performed!")
         codon_len = 3
         protein = []
         for i in range(istart, len(target_seq) - codon_len + 1, codon_len):
             codon = target_seq[i:i + codon_len]
-            if target_seq_type == 'DNA':
-                amino = DNA_CODON_TO_AMINO[codon]
-            elif target_seq_type == 'RNA':
-                amino = RNA_CODON_TO_AMINO[codon]
-            else:
-                raise ValueError("Invalid sequence type! Translation not performed!")
+            amino = codon_dict[codon]
             if amino == '_':
                 break
             protein.append(amino)
         return ''.join(protein)
 
-    def motif_locations_in_sequence(self, motif: str, seq: Optional[str] = None) -> str:
+    def motif_locations_in_sequence(
+            self, motif: str, seq: Optional[str] = None) -> str:
         """Returns all motif locations in a sequence (1-indexed)"""
         target_seq = self.return_target_seq(seq)
         m = len(motif)
-        ilocs = [i + 1 for i in range(len(target_seq) - m + 1) if target_seq[i:i + m] == motif]
+        ilocs = [i + 1 for i in range(len(target_seq) - m + 1)
+                  if target_seq[i:i + m] == motif]
         return " ".join(map(str, ilocs))
 
-    def profile_matrix(self, seq_list: Optional[List[str]] = None) -> List[List[int]]:
+    def profile_matrix(
+            self, seq_list: Optional[List[str]] = None) -> List[List[int]]:
         """Returns the profile matrix of a list of sequences"""
         target_seq_list = seq_list if seq_list is not None else self.seq_list
         nucleotides = ["A", "C", "G", "T"]
         nuc_index = {n: i for i, n in enumerate(nucleotides)}
         rows = len(nucleotides)
         cols = max(len(seq) for seq in target_seq_list)
-        profile_matrix = [[0] * cols for _ in range(rows)]
+        profile_matrix = [[0]*cols for _ in range(rows)]
         for seq in target_seq_list:
             for j, nuc in enumerate(seq):
                 profile_matrix[nuc_index[nuc]][j] += 1
@@ -186,11 +197,11 @@ class Biosequence:
         while i < len(protein_motif):
             if protein_motif[i] == '{':
                 jend = protein_motif.index('}', i)
-                rules.append(("not", protein_motif[i + 1:jend]))
+                rules.append(("not", protein_motif[i+1:jend]))
                 i = jend + 1
             elif protein_motif[i] == '[':
                 jend = protein_motif.index(']', i)
-                rules.append(("one of", protein_motif[i + 1:jend]))
+                rules.append(("one of", protein_motif[i+1:jend]))
                 i = jend + 1
             else:
                 rules.append(("exact", protein_motif[i]))
@@ -213,7 +224,9 @@ class Biosequence:
                     return False
         return True
 
-    def protein_matching_motif_locations(self, protein_seq: Optional[str] = None, rules_list: Optional[List[tuple]] = None) -> List[int]:
+    def protein_matching_motif_locations(
+            self, protein_seq: Optional[str] = None,
+              rules_list: Optional[List[tuple]] = None) -> List[int]:
         """Returns a list of locations in a protein sequence where the motif is found"""
         if rules_list is None:
             rules_list = []
@@ -238,20 +251,23 @@ class Biosequence:
     @staticmethod
     def get_reading_frame(seq: str, seq_type: str, istart: int = 0) -> str:
         """Returns a reading frame from a sequence"""
+        if seq_type == 'DNA':
+            codon_dict = DNA_CODON_TO_AMINO
+        elif seq_type == 'RNA':
+            codon_dict = RNA_CODON_TO_AMINO
+        else:
+            return ''
         codon_len = 3
         rframe = []
         for i in range(istart, len(seq) - codon_len + 1, codon_len):
             codon = seq[i:i + codon_len]
-            if seq_type == 'DNA':
-                amino = DNA_CODON_TO_AMINO[codon]
-            elif seq_type == 'RNA':
-                amino = RNA_CODON_TO_AMINO[codon]
-            else:
-                break
+            amino = codon_dict[codon]
             rframe.append(amino)
         return ''.join(rframe)
 
-    def get_sequence_reading_frames(self, seq: Optional[str] = None, seq_type: Optional[str] = None) -> List[str]:
+    def get_sequence_reading_frames(
+            self, seq: Optional[str] = None,
+              seq_type: Optional[str] = None) -> List[str]:
         """Get all 6 reading frames (3 forward + 3 reverse complement)"""
         target_seq = self.return_target_seq(seq)
         target_seq_type = self.return_target_seq_type(seq_type)
@@ -264,8 +280,20 @@ class Biosequence:
         return rframes
 
     @staticmethod
+    def get_proteins_from_all_reading_frames(rframes: List[str]) -> List[str]:
+        """Extract all proteins from a list of reading frames"""
+        all_proteins = []
+        for rf in rframes:
+            proteins = Biosequence.get_proteins_from_reading_frame(rf)
+            if proteins:
+                for p in proteins:
+                    if p not in all_proteins:
+                        all_proteins.append(p)
+        return all_proteins
+
+    @staticmethod
     def get_proteins_from_reading_frame(rframe: str) -> List[str]:
-        """Extract proteins from a reading frame"""
+        """Extract all proteins from a reading frame"""
         proteins = []
         for i in range(len(rframe)):
             if rframe[i] == 'M':
@@ -276,3 +304,10 @@ class Biosequence:
                         break
                     protein += amino
         return proteins
+
+    def get_protein_mass(self, protein_seq: Optional[str] = None) -> float:
+        """Calculate total mass of a protein sequence"""
+        target_seq = self.return_target_seq(protein_seq)
+        total_mass = sum(MONOISOTROPIC_AMINO_MASS_TABLE[aa] for aa in target_seq)
+        return total_mass
+    

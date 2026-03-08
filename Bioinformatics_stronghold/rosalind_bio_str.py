@@ -95,9 +95,15 @@ bio_strong = BioStronghold(seq, 'DNA')
 # fasta_path = DATASETS_DIR / "rosalind_orf.txt"
 # print(bio_strong.open_reading_frames(fasta_path))
 
-print("\nEnumerating Gene Orders")
-permutations = bio_strong.enumerating_gene_orders(n=5)
-print(len(permutations))
-for p in permutations:
-    print(" ".join(str(x) for x in p))
+# print("\nEnumerating Gene Orders")
+# permutations = bio_strong.enumerating_gene_orders(n=5)
+# print(len(permutations))
+# for p in permutations:
+#     print(" ".join(str(x) for x in p))
 
+print("\nCalculating Protein Mass")
+protein_seq = "SKADYEK"
+print(bio_strong.calculating_protein_mass(protein_seq))
+
+# print("\nLocating Restriction Sites")
+# print(bio_strong.locating_restriction_sites())

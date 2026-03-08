@@ -16,7 +16,8 @@ from biosequence import Biosequence
 
 
 class BioStronghold(Biosequence):
-    """Class that contains functions to solve all Bioinformatics BioStronghold problems in Rosalind"""
+    """Class that contains functions to solve all
+      Bioinformatics BioStronghold problems in Rosalind"""
 
     def __init__(self, seq: str = "ATGC", seq_type: str = "DNA"):
         """Initialize BioStronghold solver with a sequence"""
@@ -25,7 +26,8 @@ class BioStronghold(Biosequence):
     def counting_DNA_nucleotides(self) -> str:
         """Count DNA nucleotides and return formatted result"""
         count_dict = super().get_nucleotides_count()
-        rosalind_output = [f"{key}: {value}" for key, value in count_dict.items()]
+        rosalind_output = [f"{key}: {value}"
+                            for key, value in count_dict.items()]
         return ' '.join(rosalind_output)
 
     def transcribing_DNA_into_RNA(self) -> str:
@@ -34,7 +36,7 @@ class BioStronghold(Biosequence):
 
     def complementing_a_strand_of_DNA(self) -> str:
         """Get reverse complement of DNA sequence"""
-        return super().complement_sequence()[::-1]
+        return super().reverse_complement_sequence()
 
     @staticmethod
     def rabbits_and_recurrence_relations(n: int, k: int) -> int:
@@ -47,7 +49,8 @@ class BioStronghold(Biosequence):
     def computing_GC_content(self, file_path: str) -> str:
         """Find sequence with highest GC content"""
         fasta_dict = fasta_path_to_dict(file_path)
-        gc_content_dict = {key: super().get_gc_content(seq) for key, seq in fasta_dict.items()}
+        gc_content_dict = {key: super().get_gc_content(seq)
+                            for key, seq in fasta_dict.items()}
         max_key = max(gc_content_dict, key=gc_content_dict.get)
         return f"{max_key}\n{gc_content_dict[max_key]}"
 
@@ -59,7 +62,7 @@ class BioStronghold(Biosequence):
     def mendel_first_law(k: int, m: int, n: int) -> float:
         """Calculate probability of dominant phenotype offspring"""
         t = k + m + n
-        pr_yy = ( (n*(n - 1)) + (n*m) + (m*(m-1)/4) )/( t*(t-1) )
+        pr_yy = ( (n*(n-1)) + (n*m) + (m*(m-1)/4) )/( t*(t-1) )
         return 1 - pr_yy
 
     def translating_RNA_into_protein(self) -> str:
@@ -80,7 +83,8 @@ class BioStronghold(Biosequence):
         nucleotides = ["A", "C", "G", "T"]
         rosalind_output = [consensus]
         for nuc, counts in zip(nucleotides, profile_matrix):
-            rosalind_output.append(f"{nuc}: " + " ".join(str(x) for x in counts))
+            rosalind_output.append(
+                f"{nuc}: " + " ".join(str(x) for x in counts))
         return '\n'.join(rosalind_output)
 
     @staticmethod
@@ -128,6 +132,7 @@ class BioStronghold(Biosequence):
     def finding_a_protein_motif(self, uniprot_ids: List[str], protein_motif: str) -> str:
         """Find protein motif locations in UniProt sequences"""
         motif_rules_list = super().protein_motif_rules(protein_motif)
+        locations_dict = super().get_protein_seq_from_uniprot(uid)
         locations_dict = {}
         for uid in uniprot_ids:
             protein_str = super().get_protein_seq_from_uniprot(uid)
@@ -149,13 +154,7 @@ class BioStronghold(Biosequence):
         """Find all open reading frames in DNA sequence"""
         seq = list(fasta_path_to_dict(fasta_path).values())[0]
         rframes = super().get_sequence_reading_frames(seq, seq_type='DNA')
-        total_proteins = []
-        for rf in rframes:
-            rf_proteins = super().get_proteins_from_reading_frame(rf)
-            if rf_proteins:
-                for p in rf_proteins:
-                    if p not in total_proteins:
-                        total_proteins.append(p)
+        total_proteins = super().get_proteins_from_all_reading_frames(rframes)
         return '\n'.join(total_proteins)
 
     @staticmethod
@@ -165,3 +164,7 @@ class BioStronghold(Biosequence):
         numbers = [x for x in range(1, n + 1)]
         permutations = itertools.permutations(numbers)
         return list(permutations)
+
+    def calculating_protein_mass(self, protein_seq: str) -> float:
+        """Calculate the total mass of a protein sequence"""
+        return super().get_protein_mass(protein_seq)
