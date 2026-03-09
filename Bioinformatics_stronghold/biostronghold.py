@@ -36,7 +36,7 @@ class BioStronghold(Biosequence):
 
     def complementing_a_strand_of_DNA(self) -> str:
         """Get reverse complement of DNA sequence"""
-        return super().reverse_complement_sequence()
+        return super().get_reverse_complement()
 
     @staticmethod
     def rabbits_and_recurrence_relations(n: int, k: int) -> int:
@@ -168,3 +168,13 @@ class BioStronghold(Biosequence):
     def calculating_protein_mass(self, protein_seq: str) -> float:
         """Calculate the total mass of a protein sequence"""
         return super().get_protein_mass(protein_seq)
+
+    def locating_restriction_sites(self, file_path: str, seq_type = 'DNA',
+                                    l_min:int = 4, l_max:int = 12) -> str:
+        """Find locations of restriction sites in DNA sequence"""
+        seq_dict = fasta_path_to_dict(file_path)
+        seq = list(seq_dict.values())[0]
+        palindromes = super().get_reverse_palindromes(l_min, l_max, seq, seq_type)
+
+        rosalind_output = [f"{p[0]} {p[1]}" for p in palindromes]
+        return '\n'.join(rosalind_output)

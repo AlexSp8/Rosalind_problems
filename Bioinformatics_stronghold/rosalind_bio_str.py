@@ -101,9 +101,10 @@ bio_strong = BioStronghold(seq, 'DNA')
 # for p in permutations:
 #     print(" ".join(str(x) for x in p))
 
-print("\nCalculating Protein Mass")
-protein_seq = "SKADYEK"
-print(bio_strong.calculating_protein_mass(protein_seq))
+# print("\nCalculating Protein Mass")
+# protein_seq = "SKADYEK"
+# print(bio_strong.calculating_protein_mass(protein_seq))
 
-# print("\nLocating Restriction Sites")
-# print(bio_strong.locating_restriction_sites())
+print("\nLocating Restriction Sites")
+fasta_path = DATASETS_DIR / 'rosalind_revp.txt'
+print(bio_strong.locating_restriction_sites(fasta_path, seq_type='DNA', l_min=4, l_max=12))

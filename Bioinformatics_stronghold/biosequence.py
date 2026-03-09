@@ -75,8 +75,8 @@ class Biosequence:
             mapping = ''
         return target_seq.translate(mapping)
 
-    def reverse_complement_sequence(self, seq: Optional[str] = None,
-                                     seq_type: Optional[str] = None) -> str:
+    def get_reverse_complement(self,
+        seq: Optional[str] = None, seq_type: Optional[str] = None) -> str:
         """Returns reverse complement of sequence"""
         return ''.join(self.complement_sequence(seq, seq_type))[::-1]
 
@@ -271,7 +271,7 @@ class Biosequence:
         """Get all 6 reading frames (3 forward + 3 reverse complement)"""
         target_seq = self.return_target_seq(seq)
         target_seq_type = self.return_target_seq_type(seq_type)
-        reverse_complement = self.reverse_complement_sequence(target_seq, target_seq_type)
+        reverse_complement = self.get_reverse_complement(target_seq, target_seq_type)
         rframes = []
         for i in range(3):
             rframes.append(Biosequence.get_reading_frame(target_seq, target_seq_type, i))
@@ -310,4 +310,19 @@ class Biosequence:
         target_seq = self.return_target_seq(protein_seq)
         total_mass = sum(MONOISOTROPIC_AMINO_MASS_TABLE[aa] for aa in target_seq)
         return total_mass
-    
+
+    def get_reverse_palindromes(self, l_min = 4, l_max = 12,
+        seq: Optional[str] = None, seq_type: Optional[str] = None) -> List[tuple]:
+        """Find locations of reverse palindromes in a DNA sequence"""
+        target_seq = self.return_target_seq(seq)
+        target_seq_type = self.return_target_seq_type(seq_type)
+        palindromes = []
+        for i in range(len(target_seq)):
+            for l in range(l_min, l_max+1):
+                if i+l > len(target_seq):
+                    break
+                sub_seq = target_seq[i:i+l]
+                reverse_complement = self.get_reverse_complement(sub_seq, target_seq_type)
+                if sub_seq == reverse_complement:
+                    palindromes.append((i+1, l))
+        return palindromes
