@@ -326,3 +326,10 @@ class Biosequence:
                 if sub_seq == reverse_complement:
                     palindromes.append((i+1, l))
         return palindromes
+
+    def get_sequence_exons(self, introns: List[str], seq: Optional[str] = None) -> str:
+        """Splice out introns from a DNA sequence and return the exons"""
+        target_seq = self.return_target_seq(seq)
+        for i in introns:
+            target_seq = target_seq.replace(i, '')
+        return target_seq

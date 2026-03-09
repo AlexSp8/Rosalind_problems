@@ -105,6 +105,10 @@ bio_strong = BioStronghold(seq, 'DNA')
 # protein_seq = "SKADYEK"
 # print(bio_strong.calculating_protein_mass(protein_seq))
 
-print("\nLocating Restriction Sites")
-fasta_path = DATASETS_DIR / 'rosalind_revp.txt'
-print(bio_strong.locating_restriction_sites(fasta_path, seq_type='DNA', l_min=4, l_max=12))
+# print("\nLocating Restriction Sites")
+# fasta_path = DATASETS_DIR / 'rosalind_revp.txt'
+# print(bio_strong.locating_restriction_sites(fasta_path, seq_type='DNA', l_min=4, l_max=12))
+
+print("\nRNA Splicing")
+fasta_path = DATASETS_DIR / 'rosalind_splc.txt'
+print(bio_strong.rna_splicing(fasta_path, seq_type='DNA'))

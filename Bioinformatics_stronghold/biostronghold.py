@@ -169,7 +169,7 @@ class BioStronghold(Biosequence):
         """Calculate the total mass of a protein sequence"""
         return super().get_protein_mass(protein_seq)
 
-    def locating_restriction_sites(self, file_path: str, seq_type = 'DNA',
+    def locating_restriction_sites(self, file_path: str, seq_type: str = 'DNA',
                                     l_min:int = 4, l_max:int = 12) -> str:
         """Find locations of restriction sites in DNA sequence"""
         seq_dict = fasta_path_to_dict(file_path)
@@ -178,3 +178,13 @@ class BioStronghold(Biosequence):
 
         rosalind_output = [f"{p[0]} {p[1]}" for p in palindromes]
         return '\n'.join(rosalind_output)
+
+    def rna_splicing(self, file_path: str, seq_type: str = 'DNA') -> str:
+        fasta_dict = fasta_path_to_dict(file_path)
+        fasta_seqs = list(fasta_dict.values())
+        seq = fasta_seqs[0]
+        introns = fasta_seqs[1:]
+        exons_seq = super().get_sequence_exons(introns, seq)
+        istart = 0
+        return super().translate_sequence(istart, exons_seq, seq_type)
+
