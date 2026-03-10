@@ -21,6 +21,13 @@ def file_to_list(file_path: str | Path) -> List[str]:
     return file_list
 
 
+def file_to_int_list(file_path: str | Path) -> List[List[int]]:
+    """Returns a list of lists of integers from a file"""
+    with open(file_path, 'r') as f:
+        int_list = [ [int(x) for x in line.split()] for line in f]
+    return int_list
+
+
 def write_file(file_path: str | Path, content: str, mode: str = 'w') -> None:
     """
     Write content to a file.
@@ -67,3 +74,7 @@ def fasta_path_to_dict(fasta_path: str | Path) -> Dict[str, str]:
     """
     fasta_list = file_to_list(fasta_path)
     return fasta_list_to_dict(fasta_list)
+
+def str_is_sorted(s: str) -> bool:
+    """Check if a string is sorted"""
+    return s == ''.join(sorted(s))

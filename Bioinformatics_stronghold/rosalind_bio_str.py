@@ -9,13 +9,14 @@ parent_dir = str(Path(__file__).parent.parent)
 if parent_dir not in sys.path:
     sys.path.insert(0, parent_dir)
 
-from core import file_to_list
+from core import file_to_list, file_to_int_list
 from biostronghold import BioStronghold
 
 # Get the path to the Datasets directory
 DATASETS_DIR = Path(__file__).parent / "Datasets"
 
-seq = "GAGCCTACTAACGGGAT"
+# seq = "GAGCCTACTAACGGGAT"
+seq = "GAGCGT"
 bio_strong = BioStronghold(seq, 'DNA')
 
 # print("Counting DNA Nucleotides")
@@ -109,6 +110,19 @@ bio_strong = BioStronghold(seq, 'DNA')
 # fasta_path = DATASETS_DIR / 'rosalind_revp.txt'
 # print(bio_strong.locating_restriction_sites(fasta_path, seq_type='DNA', l_min=4, l_max=12))
 
-print("\nRNA Splicing")
-fasta_path = DATASETS_DIR / 'rosalind_splc.txt'
-print(bio_strong.rna_splicing(fasta_path, seq_type='DNA'))
+# print("\nRNA Splicing")
+# fasta_path = DATASETS_DIR / 'rosalind_splc.txt'
+# print(bio_strong.rna_splicing(fasta_path, seq_type='DNA'))
+
+# print("\nEnumerating k-mers Lexicographically")
+# file_path = DATASETS_DIR / 'rosalind_lexf.txt'
+# collection_list = file_to_list(file_path)
+# symbols = collection_list[0].replace(' ','')
+# n_length = int(collection_list[1])
+# print(bio_strong.enumerating_k_mers_lexicographically(symbols, n_length))
+
+print("\nLongest Increasing Subsequence")
+file_path = DATASETS_DIR / 'rosalind_lgis.txt'
+file_list = file_to_int_list(file_path)
+permutation = file_list[1]
+print(bio_strong.longest_increasing_subsequence(permutation))

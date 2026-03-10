@@ -180,6 +180,7 @@ class BioStronghold(Biosequence):
         return '\n'.join(rosalind_output)
 
     def rna_splicing(self, file_path: str, seq_type: str = 'DNA') -> str:
+        """Splice introns from DNA sequence and translate to protein"""
         fasta_dict = fasta_path_to_dict(file_path)
         fasta_seqs = list(fasta_dict.values())
         seq = fasta_seqs[0]
@@ -188,3 +189,38 @@ class BioStronghold(Biosequence):
         istart = 0
         return super().translate_sequence(istart, exons_seq, seq_type)
 
+    def enumerating_k_mers_lexicographically(
+            self, collection: str = None, n_length: int = None) -> str:
+        """Enumerate all k-mers of given length from a collection of symbols in lexicographic order."""
+        k_mers = super().get_k_mers_from_collection(collection, n_length)
+        return '\n'.join(k_mers)
+
+    @staticmethod
+    def longest_increasing_subsequence(perm):
+        n = len(perm)
+        # inc_len[i] stores the length of the longest increasing subseq ending at i
+        inc_len = [1] * n
+        # inc_prev[i] stores the index of the previous element so we can reconstruct it
+        inc_prev = [-1] * n
+
+        dec_len = [1] * n
+        dec_prev = [-1] * n
+
+        for i in range(n):
+            for j in range(i):
+                if perm[j] < perm[i] and inc_len[j] + 1 > inc_len[i]:
+                    inc_len[i] = inc_len[j] + 1
+                    inc_prev[i] = j
+                if perm[j] > perm[i] and dec_len[j] + 1 > dec_len[i]:
+                    dec_len[i] = dec_len[j] + 1
+                    dec_prev[i] = j
+
+        def reconstruct(lengths, predecessors):
+            max_idx = lengths.index(max(lengths))
+            path = []
+            while max_idx != -1:
+                path.append(str(perm[max_idx]))
+                max_idx = predecessors[max_idx]
+            return " ".join(path[::-1])
+
+        return reconstruct(inc_len, inc_prev) + "\n" + reconstruct(dec_len, dec_prev)

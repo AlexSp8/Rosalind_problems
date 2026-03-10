@@ -13,7 +13,6 @@ if parent_dir not in sys.path:
 
 from config import BASE_NUCLEOTIDES, RNA_CODON_TO_AMINO, DNA_CODON_TO_AMINO, RNA_AMINO_TO_CODON, MONOISOTROPIC_AMINO_MASS_TABLE
 
-
 class Biosequence:
     """Class for manipulating biological sequences (DNA, RNA)"""
 
@@ -333,3 +332,22 @@ class Biosequence:
         for i in introns:
             target_seq = target_seq.replace(i, '')
         return target_seq
+
+    def get_seq_k_mers(self, seq: str = None, n_length: int = 1) -> List[str]:
+        """Returns all k-mers of length n in a sequence"""
+        target_seq = self.return_target_seq(seq)
+        n = n_length if n_length is not None else len(target_seq)
+        k_mers = []
+        for i in range(len(target_seq) - n + 1):
+            k_mer = target_seq[i:i+n]
+            k_mers.append(k_mer)
+        return k_mers
+
+    def get_k_mers_from_collection(self, collection: str = '', n_length: int = 1) -> List[str]:
+        """Returns all possible k-mers of length n from a collection of symbols"""
+        from itertools import product
+        target_collection = self.return_target_seq(collection)
+        n = n_length if n_length is not None else 1
+        collection_sorted = ''.join(sorted(target_collection))
+        k_mers = [''.join(p) for p in product(collection_sorted, repeat=n)]
+        return k_mers
