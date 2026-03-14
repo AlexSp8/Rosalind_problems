@@ -6,7 +6,21 @@ from pathlib import Path
 from typing import Dict, List
 
 
-def file_to_list(file_path: str | Path) -> List[str]:
+def file_to_str(file_path: str | Path) -> str:
+    """
+    Read a file and return its lines as a string.
+
+    Args:
+        file_path: Path to the file to read
+
+    Returns:
+        String of stripped lines from the file
+    """
+    with open(file_path, 'r') as f:
+        file_str = f.read().replace('\n', '')
+    return file_str
+
+def file_to_str_list(file_path: str | Path) -> List[str]:
     """
     Read a file and return its lines as a list.
 
@@ -17,14 +31,14 @@ def file_to_list(file_path: str | Path) -> List[str]:
         List of stripped lines from the file
     """
     with open(file_path, 'r') as f:
-        file_list = [l.strip() for l in f.readlines()]
-    return file_list
+        str_list = [l.strip() for l in f.readlines()]
+    return str_list
 
 
 def file_to_int_list(file_path: str | Path) -> List[List[int]]:
     """Returns a list of lists of integers from a file"""
     with open(file_path, 'r') as f:
-        int_list = [ [int(x) for x in line.split()] for line in f]
+        int_list = [ [int(x) for x in line.split()] for line in f ]
     return int_list
 
 
@@ -72,7 +86,7 @@ def fasta_path_to_dict(fasta_path: str | Path) -> Dict[str, str]:
     Returns:
         Dictionary with FASTA labels as keys and sequences as values
     """
-    fasta_list = file_to_list(fasta_path)
+    fasta_list = file_to_str_list(fasta_path)
     return fasta_list_to_dict(fasta_list)
 
 def str_is_sorted(s: str) -> bool:
